@@ -3,12 +3,16 @@ const router = express.Router()
 
 
 const UserController= require("../controller/userController")
+const vaccineController= require("../controller/vaccineController")
 //const BookController= require("../controllers/bookController")
-//const Middleware= require("../middleware/authorization")
+const Middleware= require("../middleware/authorisation")
 //const ReviewController= require("../controllers/reviewController")
 
 router.post("/registerUser",UserController.registerUser)
  router.post("/loginUser", UserController.loginUser)
+ router.post("/registerVaccine", vaccineController.registervaccine)
+ router.get("/getVaccineDetails", UserController.getVaccineDetails)
+ router.put("/userVaccineRegister",UserController.userRegisterVaccine)
 // router.post("/books",Middleware.loginCheck, BookController.createBook)//1
 // router.post("/books/:bookId/review", ReviewController.createReviewByBookId)//1
 // router.put("/books/:bookId/review/:reviewId", ReviewController.updateReviews)

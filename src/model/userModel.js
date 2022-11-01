@@ -25,6 +25,10 @@ const userRegisterSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    firstDose:{type:Boolean,default:false},
+    firstDoseDate:String,
+    secoundDose:{type:Boolean,default:false},
+    secoundDoseDate:String,
 
 },{timestamps:true})
 

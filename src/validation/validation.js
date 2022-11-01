@@ -19,8 +19,12 @@ const isValidString = function (value) {
     if (typeof value === "string" && value.trim().length === 0) return false;
     return true;
 };
+const isValidNumber = function (value) {
+    if (typeof value === Number && value.trim().length === 0) return false;
+    return true;
+};
 
 
 
 
-module.exports= {isValid, isValidRequestBody, isValidObjectId, isValidString}
+module.exports= {isValid, isValidRequestBody, isValidObjectId, isValidString, isValidNumber}

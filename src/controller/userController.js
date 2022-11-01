@@ -2,7 +2,8 @@ const userModel = require("../model/userModel");
 // const EmailValidator=require('email-validator');
 const jwt = require("jsonwebtoken")
 //const bcrypt = require('bcrypt')
- const Validator = require("../validation/validation")
+ const Validator = require("../validation/validation");
+const vaccineModel = require("../model/vaccineModel");
 
 
 
@@ -117,7 +118,48 @@ const loginUser = async function (req, res) {
       res.status(500).send({ status: false, error: err.message })
     }
   }
+
+  const getVaccineDetails = async function(req,res){
+
+    let body = req.body;
+    if (!Validator.isValidRequestBody(body)) return res.status(400).send({ status: false, msg: "Please Provide Data" })
+    const {  vaccineDate } = body
+
+    if (!Validator.isValidString(vaccineDate.Date)) {
+        return res.status(400).send({ status: false, msg: "Vaccine Date field cannot be empty" })
+    }
+    if (!Validator.isValidString(vaccineDate.Month)) {
+        return res.status(400).send({ status: false, msg: "Vaccine Date field cannot be empty" })
+    }
+    if (!Validator.isValidString(vaccineDate.Year)) {
+        return res.status(400).send({ status: false, msg: "Vaccine Date field cannot be empty" })
+    }
+    const bookingslot = await vaccineModel.find(body).select({availableBookingSlot:1});
+
+        if (!Validator.isValid(bookingslot)) {
+            return res.status(404).send({ status: false, message: "No vaccine date found" });
+        }
+        res.status(200).send({ status: true, message: "Available vaccine list", data: bookingslot });
+
+  }
+
+  const userRegisterVaccine = async function(req,res){
+    let availableBookingSlot=req.availableBookingSlot
+    let MobilePhone=req.MobilePhone
+    let body=req.body
+    const {time,date } = body
+    let availableTime = await vaccineModel.findOne({availableBookingSlot:availableBookingSlot})
+    if(time!=availableTime){
+        return res.status(400).send({ status: false, msg: "Please Select a time slot between 10AM to 5PM" })
+        
+    }
+    const userData = await userModel.findOne({MobilePhone:MobilePhone})
+    if (userData.firstDose === true && userData.secondDose === true) {
+        return res.status(400).send({ status: false, message: `already vaccinated` })
+    }
+  }
   
 module.exports.registerUser=registerUser;
 module.exports.loginUser=loginUser;
-
+module.exports.getVaccineDetails=getVaccineDetails;
+module.exports.userRegisterVaccine=userRegisterVaccine;
